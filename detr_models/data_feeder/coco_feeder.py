@@ -90,7 +90,7 @@ class COCOFeeder:
                         input_data[2].shape
                     )
                 )
-                print("Object IDs matching to Image ID: {}".foramt(input_data[3]))
+                print("Object IDs matching to Image ID: {}".format(input_data[3]))
 
             yield input_data
 
