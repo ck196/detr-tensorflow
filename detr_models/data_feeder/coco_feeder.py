@@ -80,6 +80,18 @@ class COCOFeeder:
 
         for batch_iteration, batch_image_ids in enumerate(image_ids):
             input_data = self.prepare_inputs(coco, batch_image_ids)
+
+            if verbose:
+                print("Read Batch Imgs: {}".format(batch_image_ids))
+                print("Batch Images Input Shape:{}".format(input_data[0].shape))
+                print("Batch Class Labels Input Shape:{}".format(input_data[1].shape))
+                print(
+                    "Batch Class Bounding Boxes Input Shape:{}".format(
+                        input_data[2].shape
+                    )
+                )
+                print("Object IDs matching to Image ID: {}".foramt(input_data[3]))
+
             yield input_data
 
             if verbose:
