@@ -129,7 +129,8 @@ def prepare_cost_matrix(
     # Objekt Bounding Boxes in Batch
     # [#Obj , #Coord]
     obj_bboxes_xywh = tf.gather_nd(
-        batch_bbox, tf.where(tf.not_equal(batch_bbox, no_object_class))
+        batch_bbox,
+        tf.where(tf.reduce_any(tf.not_equal(batch_bbox, no_object_class), axis=-1)),
     )
     obj_bboxes_xywh = tf.reshape(obj_bboxes_xywh, shape=[num_objects, 4])
     obj_bboxes_xyxy = box_cxcywh_to_xyxy(obj_bboxes_xywh)

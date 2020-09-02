@@ -13,9 +13,9 @@ class DefaultDETRConfig:
         self.num_classes = 4
 
         # Transformer Config
-        self.dim_transformer = 256
+        self.dim_transformer = 512
         self.dim_feedforward = 1024
-        self.num_transformer_layer = 2
+        self.num_transformer_layer = 4
         self.num_heads = 8
 
         # Training Config
@@ -33,5 +33,5 @@ class DefaultDETRConfig:
 
         # Height and Width of Image after rescaling
         # Only Supporeted for `data_type` COCO
-        self.image_height = 270
-        self.image_width = 480
+        self.image_height = 288
+        self.image_width = 512
