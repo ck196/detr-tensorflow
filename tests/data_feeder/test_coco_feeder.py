@@ -187,7 +187,7 @@ def test_retrieve_normalized_bbox():
         ]
     )
     height, width = 5, 6
-    result = retrieve_normalized_bbox([mask], height, width)
+    result = retrieve_normalized_bbox([mask], width, height)
     expected_result = (1 / width, 1 / height, 3 / width, 2 / height)
     assert len(result[0]) == 4
     assert (result[0] == expected_result).all()
@@ -202,7 +202,7 @@ def test_retrieve_normalized_bbox():
         ]
     )
 
-    result = retrieve_normalized_bbox([mask], height, width)
+    result = retrieve_normalized_bbox([mask], width, height)
     expected_result = (1 / width, 0 / height, 3 / width, 4 / height)
     assert len(result[0]) == 4
     assert (result[0] == expected_result).all()

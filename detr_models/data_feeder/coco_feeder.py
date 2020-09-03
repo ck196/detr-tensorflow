@@ -133,20 +133,20 @@ class COCOFeeder:
 
             sample_image = load_image(image_path)
             sample_image = resize_and_pad_image(
-                sample_image, height=self.image_height, width=self.image_width
+                sample_image, width=self.image_width, height=self.image_height
             )
 
             # Load target class and masks
             sample_cls, sample_masks = load_target_cls_and_masks(coco, img_id)
             sample_masks = resize_and_pad_masks(
-                sample_masks, height=self.image_height, width=self.image_width
+                sample_masks, width=self.image_width, height=self.image_height
             )
 
             # Retrieve Bounding Boxes
             sample_bboxs = retrieve_normalized_bbox(
                 sample_masks=sample_masks,
-                height=self.image_height,
                 width=self.image_width,
+                height=self.image_height,
             )
 
             # Padd target classes and bounding boxes
@@ -305,9 +305,11 @@ def _downscale_image(image: Image, width: int, height: int):
 
     Parameters
     ----------
-    image : Image
+    image : PIL.Image
     width : int
+        Resized image width.
     height : int
+        Resized image height.
 
     Returns
     -------
@@ -327,7 +329,9 @@ def _pad_image(image: Image, width: int, height: int):
     ----------
     image : PIL.Image
     width : int
+        Resized image width.
     height : int
+        Resized image height.
 
     Returns
     -------
@@ -348,9 +352,9 @@ def resize_and_pad_image(image: Image, width: int, height: int):
     ----------
     image : PIL.Image
     width : int
-        Width to be resized to.
+        Resized image width.
     height : int
-        Height to be resized to.
+        Resized image height.
 
     Returns
     -------
@@ -373,7 +377,9 @@ def resize_and_pad_masks(sample_masks: np.ndarray, width: int, height: int):
     ----------
     sample_masks : np.ndarray
     width : int
+        Resized image width.
     height : int
+        Resized image height.
 
     Returns
     -------
@@ -385,7 +391,25 @@ def resize_and_pad_masks(sample_masks: np.ndarray, width: int, height: int):
     return np.array(sample_masks)
 
 
-def retrieve_normalized_bbox(sample_masks: np.ndarray, height: int, width: int):
+def retrieve_normalized_bbox(sample_masks: np.ndarray, width: int, height: int):
+    """Retrieve the bounding box from the resized segmentation mask and normalize the
+    coordinates using the image shapes.
+
+    Parameters
+    ----------
+    sample_masks : np.ndarray
+        Resized masks of shape [#Objects, Height, Width]
+    width : int
+        Resized image width.
+    height : int
+        Resized image height.
+
+    Returns
+    -------
+    sample_bboxs : np.ndarray
+        Normalized bounding boxes of shape [#Objects, 4].
+        The coordinates are specified as [xmin, ymin, width, height].
+    """
     sample_bboxs = []
 
     for mask in sample_masks:
