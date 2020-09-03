@@ -82,7 +82,7 @@ def box_cxcywh_to_xyxy(bboxes):
         w = tf.gather(sample, 2)
         h = tf.gather(sample, 3)
         sample = tf.stack(
-            [(x_c - 0.5 * w), (y_c - 0.5 * h), (x_c + 0.5 * w), (y_c + 0.5 * h)]
+            [(y_c - 0.5 * h), (x_c - 0.5 * w), (y_c + 0.5 * h), (x_c + 0.5 * w)]
         )
         xyxy = xyxy.write(idx, sample)
 

@@ -296,7 +296,6 @@ def _train(
     return [detr_loss, score_loss, bbox_loss]
 
 
-@tf.function
 def calculate_score_loss(batch_cls, detr_scores, indices):
     """Helper function to calculate the score loss.
 
@@ -324,7 +323,6 @@ def calculate_score_loss(batch_cls, detr_scores, indices):
     return tf.reduce_mean(batch_score_loss)
 
 
-@tf.function
 def calculate_bbox_loss(batch_bbox, detr_bbox, indices):
     """Helper function to calculate the bounding box loss.
 

@@ -125,7 +125,6 @@ def bbox_loss(
     tf.Tensor
         Sample mean bounding box loss. Averaged over number of objects in sample.
     """
-
     # Retrieve query and object idx
     query_idx, object_idx = filter_sample_indices(indices)
 
@@ -138,7 +137,7 @@ def bbox_loss(
     # Calculate GIoU Loss
     giou_loss = tfa.losses.GIoULoss(reduction=tf.keras.losses.Reduction.NONE)
 
-    giou_loss = giou_loss(
+    giou_loss = 1 - tfa.losses.giou_loss(
         y_true=box_cxcywh_to_xyxy(ordered_target),
         y_pred=box_cxcywh_to_xyxy(ordered_output),
     )
