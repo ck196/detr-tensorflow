@@ -150,13 +150,13 @@ class COCOFeeder:
                 target=sample_cls,
                 num_columns=1,
                 num_queries=self.num_queries,
-                num_classes=self.num_classes,
+                fill_value=self.num_classes,
             )
             sample_bboxs = padd_target_for_queries(
                 target=sample_bboxs,
                 num_columns=4,
                 num_queries=self.num_queries,
-                num_classes=self.num_classes,
+                fill_value=0,
             )
 
             # Append to placeholders
@@ -396,13 +396,12 @@ def retrieve_bbox_from_masks(sample_masks: np.ndarray):
 
 
 def padd_target_for_queries(
-    target: np.ndarray, num_columns: int, num_queries: int, num_classes: int
+    target: np.ndarray, num_columns: int, num_queries: int, fill_value: int
 ):
     """Padd a given target to match number of queries.
 
     Usually, #Objects < #Queries and we therefore need to padd the targets to match the
-    predictions in the model. We use `num_classes` to fill the arrays, as this corresponds
-    to the background class.
+    predictions in the model. We use `fill_value` to fill the arrays.
 
     Parameters
     ----------
@@ -412,13 +411,13 @@ def padd_target_for_queries(
         Number of columns for padding.
     num_queries : int
         Number of queries used in transformer network.
-    num_classes : int
-        Number of target classes.
+    fill_value : int
+        Padding fill value.
 
     Returns
     -------
     padded : np.ndarray
-        Padded target array of shape (#Queries, num_columns), padded with `num_classes`.
+        Padded target array of shape (#Queries, num_columns), padded with `fill_value`.
     """
 
     if target.shape[0] > num_queries:
@@ -427,7 +426,7 @@ def padd_target_for_queries(
         )
 
     padded = np.full(
-        shape=(num_queries, num_columns), fill_value=num_classes, dtype=np.float32
+        shape=(num_queries, num_columns), fill_value=fill_value, dtype=np.float32
     )
     for idx, target_object in enumerate(target):
         padded[idx, :] = target_object

@@ -118,7 +118,7 @@ def prepare_cost_matrix(
     obj_classes = tf.cast(obj_classes, dtype=tf.int64)
     num_objects = tf.size(obj_classes)
     one = tf.constant(1, dtype=tf.int32)
-
+    zero = tf.constant(0.0)
     # Compute the classification cost. Contrary to the loss, we don't use the NLL,
     # but approximate it in 1 - proba[target class].
     # The 1 is a constant that doesn't change the matching, it can be ommitted.
@@ -129,8 +129,7 @@ def prepare_cost_matrix(
     # Objekt Bounding Boxes in Batch
     # [#Obj , #Coord]
     obj_bboxes_xywh = tf.gather_nd(
-        batch_bbox,
-        tf.where(tf.reduce_any(tf.not_equal(batch_bbox, no_object_class), axis=-1)),
+        batch_bbox, tf.where(tf.reduce_any(tf.not_equal(batch_bbox, zero), axis=-1))
     )
     obj_bboxes_xywh = tf.reshape(obj_bboxes_xywh, shape=[num_objects, 4])
     obj_bboxes_xyxy = box_cxcywh_to_xyxy(obj_bboxes_xywh)
