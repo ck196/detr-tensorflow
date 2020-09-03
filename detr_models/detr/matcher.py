@@ -4,7 +4,7 @@ import ipdb  # noqa: F401
 import tensorflow as tf
 import tensorflow_addons as tfa
 from detr_models.detr.config import DefaultDETRConfig
-from detr_models.detr.utils import box_cxcywh_to_xyxy
+from detr_models.detr.utils import box_x1y1wh_to_yxyx
 from scipy.optimize import linear_sum_assignment
 
 
@@ -132,7 +132,7 @@ def prepare_cost_matrix(
         batch_bbox, tf.where(tf.reduce_any(tf.not_equal(batch_bbox, zero), axis=-1))
     )
     obj_bboxes_xywh = tf.reshape(obj_bboxes_xywh, shape=[num_objects, 4])
-    obj_bboxes_xyxy = box_cxcywh_to_xyxy(obj_bboxes_xywh)
+    obj_bboxes_yxyx = box_x1y1wh_to_yxyx(obj_bboxes_xywh)
 
     # Prepare Out BBOX
     # [BS * #Queries, #Obj, #Coord]
@@ -140,9 +140,9 @@ def prepare_cost_matrix(
     out_bbox_xywh = tf.expand_dims(out_bbox, axis=1)
     out_bbox_xywh = tf.tile(out_bbox_xywh, [one, num_objects, one])
     # 2. In Positional Shape for IoU Loss
-    out_bbox_xyxy = box_cxcywh_to_xyxy(out_bbox)
-    out_bbox_xyxy = tf.tile(
-        tf.expand_dims(out_bbox_xyxy, axis=1), [one, num_objects, one]
+    out_bbox_yxyx = box_x1y1wh_to_yxyx(out_bbox)
+    out_bbox_yxyx = tf.tile(
+        tf.expand_dims(out_bbox_yxyx, axis=1), [one, num_objects, one]
     )
 
     # Calculate Bounding Box Matching Costs
@@ -151,7 +151,7 @@ def prepare_cost_matrix(
 
     # GIoU Loss
     giou_loss = tfa.losses.GIoULoss(reduction=tf.keras.losses.Reduction.NONE)
-    cost_iou = -giou_loss(y_true=obj_bboxes_xyxy, y_pred=out_bbox_xyxy)
+    cost_iou = -giou_loss(y_true=obj_bboxes_yxyx, y_pred=out_bbox_yxyx)
     cost_iou = tf.reshape(cost_iou, shape=[batch_size * num_queries, num_objects])
 
     cost_bbox = l1_cost_factor * cost_l1 + iou_cost_factor * cost_iou
