@@ -143,7 +143,11 @@ class COCOFeeder:
             )
 
             # Retrieve Bounding Boxes
-            sample_bboxs = retrieve_bbox_from_masks(sample_masks)
+            sample_bboxs = retrieve_normalized_bbox(
+                sample_masks=sample_masks,
+                height=self.image_height,
+                width=self.image_width,
+            )
 
             # Padd target classes and bounding boxes
             sample_cls = padd_target_for_queries(
@@ -381,7 +385,7 @@ def resize_and_pad_masks(sample_masks: np.ndarray, width: int, height: int):
     return np.array(sample_masks)
 
 
-def retrieve_bbox_from_masks(sample_masks: np.ndarray):
+def retrieve_normalized_bbox(sample_masks: np.ndarray, height: int, width: int):
     sample_bboxs = []
 
     for mask in sample_masks:
@@ -389,7 +393,8 @@ def retrieve_bbox_from_masks(sample_masks: np.ndarray):
         ymin, ymax = np.min(ycoord), np.max(ycoord)
         xmin, xmax = np.min(xcoord), np.max(xcoord)
         w, h = (xmax - xmin), (ymax - ymin)
-        bbox = xmin, ymin, w, h
+        bbox = xmin / width, ymin / height, w / width, h / height
+
         sample_bboxs.append(bbox)
 
     return np.array(sample_bboxs)
