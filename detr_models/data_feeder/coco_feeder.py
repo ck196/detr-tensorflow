@@ -74,9 +74,10 @@ class COCOFeeder:
         coco = load_coco(path_to_coco)
 
         image_ids = coco.getImgIds()
-        random.shuffle(image_ids)
 
         image_ids = slize_batches(image_ids, self.batch_size)
+        # Each  Iteration consists of k=1000 steps
+        image_ids = random.choices(image_ids, k=1000)
 
         for batch_iteration, batch_image_ids in enumerate(image_ids):
             input_data = self.prepare_inputs(coco, batch_image_ids)
