@@ -220,6 +220,11 @@ class DETR:
 
                 batch_loss = np.array([loss.numpy() for loss in batch_loss])
 
+                if training_config["verbose"]:
+                    print("\nDETR Batch Loss: {:.3f}".format(batch_loss[0]))
+                    print("Cls. Batch Loss: {:.3f}".format(batch_loss[1]))
+                    print("Bounding Box Batch Loss: {:.3f}\n".format(batch_loss[2]))
+
                 epoch_loss = epoch_loss + batch_loss
 
                 batch_iteration += 1
