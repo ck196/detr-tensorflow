@@ -83,7 +83,11 @@ class COCOFeeder:
         image_ids = random.choices(image_ids, k=1000)
 
         for batch_iteration, batch_image_ids in enumerate(image_ids):
-            input_data = self.prepare_inputs(coco, batch_image_ids)
+            try:
+                input_data = self.prepare_inputs(coco, batch_image_ids)
+            except Exception as ex:
+                print("Could not Read Image IDs: `{}` - {}".format(batch_image_ids, ex))
+                continue
 
             if verbose:
                 print("Read Batch Imgs: {}".format(batch_image_ids))

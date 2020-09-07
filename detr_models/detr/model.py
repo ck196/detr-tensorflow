@@ -229,6 +229,7 @@ class DETR:
 
                 batch_iteration += 1
 
+            epoch_loss = (1 / batch_iteration) * epoch_loss
             detr_loss.append(epoch_loss)
 
             print("DETR Loss: {:.3f}".format(epoch_loss[0]), flush=True)
@@ -290,7 +291,9 @@ def _train(
             detr_scores, detr_bbox, batch_cls, batch_bbox, obj_indices
         )
 
-        score_loss = calculate_score_loss(batch_cls, detr_scores, indices)
+        score_loss = tf.constant(10.0) * calculate_score_loss(
+            batch_cls, detr_scores, indices
+        )
         bbox_loss = calculate_bbox_loss(batch_bbox, detr_bbox, indices)
 
         detr_loss = score_loss + bbox_loss
