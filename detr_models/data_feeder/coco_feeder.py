@@ -43,7 +43,10 @@ class COCOFeeder:
             Image height used for scaling of input images and masks.
         """
         self.name = "COCOFeeder"
+
         self.storage_path = storage_path
+        print("\nFeed DETR model with data from: {}\n".format(storage_path), flush=True)
+
         self.image_path = os.path.join(storage_path, "images")
 
         self.num_queries = np.int32(num_queries)

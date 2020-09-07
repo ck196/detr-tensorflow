@@ -231,7 +231,10 @@ class DETR:
 
             detr_loss.append(epoch_loss)
 
-            print("DETR Loss: %f" % epoch_loss[0], flush=True)
+            print("DETR Loss: {:.3f}".format(epoch_loss[0]), flush=True)
+            print("Class Loss: {:.3f}".format(epoch_loss[1]), flush=True)
+            print("Bounding Box Loss: {:.3f}".format(epoch_loss[2]), flush=True)
+
             print(f"Time for epoch {epoch + 1} is {time.time()-start} sec", flush=True)
             print("-------------------------------------------\n", flush=True)
 
