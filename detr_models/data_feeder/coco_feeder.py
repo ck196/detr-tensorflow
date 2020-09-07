@@ -95,8 +95,7 @@ class COCOFeeder:
 
             yield input_data
 
-            if verbose:
-                progress_bar(total=len(image_ids), current=batch_iteration + 1)
+            progress_bar(total=len(image_ids), current=batch_iteration + 1)
 
     def prepare_inputs(self, coco: object, batch_image_ids: list):
         """Prepare input data for DETR.
